@@ -78,7 +78,6 @@ public class DeviceResource extends BaseObjectResource<Device> {
             @QueryParam("id") List<Long> deviceIds) throws StorageException {
 
         if (!uniqueIds.isEmpty() || !deviceIds.isEmpty()) {
-
             List<Device> result = new LinkedList<>();
             for (String uniqueId : uniqueIds) {
                 result.addAll(storage.getObjects(Device.class, new Request(
@@ -94,10 +93,9 @@ public class DeviceResource extends BaseObjectResource<Device> {
                                 new Condition.Equals("id", deviceId),
                                 new Condition.Permission(User.class, getUserId(), Device.class)))));
             }
-            return result;
+            return null;
 
         } else {
-
             var conditions = new LinkedList<Condition>();
 
             if (all) {
@@ -112,9 +110,8 @@ public class DeviceResource extends BaseObjectResource<Device> {
                     conditions.add(new Condition.Permission(User.class, userId, baseClass).excludeGroups());
                 }
             }
-
             return storage.getObjects(baseClass, new Request(new Columns.All(), Condition.merge(conditions)));
-
+           
         }
     }
 

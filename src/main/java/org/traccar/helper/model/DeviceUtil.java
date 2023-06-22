@@ -76,4 +76,9 @@ public final class DeviceUtil {
         return results;
     }
 
+    public static Collection<Device> getDevices(Storage storage, long userId) throws StorageException {
+    return storage.getObjects(Device.class, new Request(
+            new Columns.All(),
+            new Condition.Permission(User.class, userId, Device.class)));
+        }
 }

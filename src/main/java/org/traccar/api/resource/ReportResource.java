@@ -25,6 +25,7 @@ import org.traccar.model.UserRestrictions;
 import org.traccar.reports.CombinedReportProvider;
 import org.traccar.reports.EventsReportProvider;
 import org.traccar.reports.RouteReportProvider;
+import org.traccar.reports.DevicesReportProvider;
 import org.traccar.reports.StopsReportProvider;
 import org.traccar.reports.SummaryReportProvider;
 import org.traccar.reports.TripsReportProvider;
@@ -67,6 +68,9 @@ public class ReportResource extends SimpleObjectResource<Report> {
 
     @Inject
     private RouteReportProvider routeReportProvider;
+
+    @Inject
+    private DevicesReportProvider DevicesReportProvider;
 
     @Inject
     private StopsReportProvider stopsReportProvider;
@@ -153,6 +157,41 @@ public class ReportResource extends SimpleObjectResource<Report> {
         return getRouteExcel(deviceIds, groupIds, from, to, type.equals("mail"));
     }
 
+
+    // @Path("devices")
+    // @GET
+    // public Collection<Position> getDevices(
+    //         @QueryParam("deviceId") List<Long> deviceIds,
+    //         @QueryParam("groupId") List<Long> groupIds,
+    //         @QueryParam("from") Date from,
+    //         @QueryParam("to") Date to) throws StorageException {
+    //     permissionsService.checkRestriction(getUserId(), UserRestrictions::getDisableReports);
+    //     //LogAction.logReport(getUserId(), "route", from, to, deviceIds, groupIds);
+    //     return DevicesReportProvider.getObjects(getUserId(), deviceIds, groupIds, from, to);
+    // }
+
+    @Path("devices")
+    @GET
+    @Produces(EXCEL)
+    public Response getDevicesExcel(
+            @QueryParam("mail") boolean mail) throws StorageException {
+        permissionsService.checkRestriction(getUserId(), UserRestrictions::getDisableReports);
+        return executeReport(getUserId(), mail, stream -> {
+            //LogAction.logReport(getUserId(), "device", from, to, deviceIds, groupIds);
+            DevicesReportProvider.getDeviceReportExcel(stream, getUserId());
+        });
+    }
+
+    @Path("devices/{type:xlsx|mail}")
+    @GET
+    @Produces(EXCEL)
+    public Response getDevicesExcel(
+            @PathParam("type") String type) throws StorageException {
+        return getDevicesExcel(type.equals("mail"));
+    }
+
+    
+    
     @Path("events")
     @GET
     public Collection<Event> getEvents(
