@@ -157,19 +157,6 @@ public class ReportResource extends SimpleObjectResource<Report> {
         return getRouteExcel(deviceIds, groupIds, from, to, type.equals("mail"));
     }
 
-
-    // @Path("devices")
-    // @GET
-    // public Collection<Position> getDevices(
-    //         @QueryParam("deviceId") List<Long> deviceIds,
-    //         @QueryParam("groupId") List<Long> groupIds,
-    //         @QueryParam("from") Date from,
-    //         @QueryParam("to") Date to) throws StorageException {
-    //     permissionsService.checkRestriction(getUserId(), UserRestrictions::getDisableReports);
-    //     //LogAction.logReport(getUserId(), "route", from, to, deviceIds, groupIds);
-    //     return DevicesReportProvider.getObjects(getUserId(), deviceIds, groupIds, from, to);
-    // }
-
     @Path("devices")
     @GET
     @Produces(EXCEL)
@@ -177,7 +164,7 @@ public class ReportResource extends SimpleObjectResource<Report> {
             @QueryParam("mail") boolean mail) throws StorageException {
         permissionsService.checkRestriction(getUserId(), UserRestrictions::getDisableReports);
         return executeReport(getUserId(), mail, stream -> {
-            //LogAction.logReport(getUserId(), "device", from, to, deviceIds, groupIds);
+            //LogAction.logReport(getUserId(), "device");
             DevicesReportProvider.getDeviceReportExcel(stream, getUserId());
         });
     }

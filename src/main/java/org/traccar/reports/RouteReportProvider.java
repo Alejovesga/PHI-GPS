@@ -64,7 +64,6 @@ public class RouteReportProvider {
         for (Device device: DeviceUtil.getAccessibleDevices(storage, userId, deviceIds, groupIds)) {
             result.addAll(PositionUtil.getPositions(storage, device.getId(), from, to));
         }
-        System.out.println(result);
         return result;
     }
 
